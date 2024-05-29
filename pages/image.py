@@ -1,4 +1,5 @@
 import streamlit as st
+from openai import OpenAI
 
 @st.cache_data
 def generate_image(image_prompt):
