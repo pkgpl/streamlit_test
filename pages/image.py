@@ -10,10 +10,9 @@ def generate_image(image_prompt):
     image_url = response.data[0].url
     return image_url
 
-image_prompt = st.text_input("어떤 그림을 원하시나요?",key="image_prompt")
+st.session_state['image_prompt'] = st.text_input("어떤 그림을 원하시나요?",value=st.session_state.get("image_prompt",''))
 
 if st.button("Run"):
   with st.spinner("Generating..."):
-    image_url = generate_image(image_prompt)
-    st.markdown(f"![{image_prompt}]({image_url})")
-    
+    image_url = generate_image(st.session_state['image_prompt'])
+    st.markdown(f"![{st.session_state['image_prompt']}]({image_url})")

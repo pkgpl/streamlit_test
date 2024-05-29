@@ -12,11 +12,11 @@ def ask_llm(prompt):
 
 st.header("Hello World !!")
 
-st.session_state['OPENAI_API_KEY'] = st.text_input("Your OpenAI API Key", type="password")
+st.session_state['OPENAI_API_KEY'] = st.text_input("Your OpenAI API Key", type="password", value=st.session_state.get("OPENAI_API_KEY",''))
+st.session_state['prompt'] = st.text_input("질문?",value=st.session_state.get("prompt",''))
 
-prompt = st.text_input("질문?",key="prompt")
 
 if st.button("Run"):
   with st.spinner("Generating..."):
-    answer = ask_llm(prompt)
+    answer = ask_llm(st.session_state['prompt'])
     st.markdown(f"응답: {answer}")
