@@ -104,22 +104,27 @@ if prompt := st.chat_input("What is up?"):
         thread_id=thread.id,
         run_id=run.id
     )
-    for i,run_step in enumerate(run_steps.data):
-        #print(f"{i}: {run_step.type}: {run_step.step_details}")
+    tools_info = {}
+    for i,run_step in enumerate(run_steps.data)
         if run_step.step_details.type == 'tool_calls':
             for tool_call in run_step.step_details.tool_calls:
-                st.markdown(f"Tool used: {tool_call.type}")
                 if tool_call.type == 'code_interpreter':
                     with st.expander("Code"):
-                        st.code(tool_call.code_interpreter.input)
-                    #print(f"- Input: {tool_call.code_interpreter.input}")
+                        tools_info[tool_call.type] = tool_call.code_interpreter.input
 
     thread_messages = client.beta.threads.messages.list(thread.id, limit=1)
     response = thread_messages.data[0].content[0].text.value
 
+    for k,v in tools_info:
+        response += """
+[Tool: {k}]
+{v}
+"""
+
     # show assistant message
     with st.chat_message("assistant"):
         st.markdown(response)
+
     # save assistant message in memory
     st.session_state.messages.append({"role":"assistant", "content": response})
 
