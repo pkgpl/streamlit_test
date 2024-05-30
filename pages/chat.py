@@ -116,9 +116,11 @@ if prompt := st.chat_input("What is up?"):
     response = thread_messages.data[0].content[0].text.value
 
     for k,v in tools_info.items():
-        response += """
-[Tool: {k}]
+        response += f"""
+### [Tool: {k}]
+```
 {v}
+```
 """
 
     # show assistant message
