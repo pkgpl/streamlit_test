@@ -20,12 +20,12 @@ def generate_image(image_prompt):
 def delete_thread():
     if "thread" in st.session_state:
         response = client.beta.threads.delete(st.session_state['thread'].id)
-        del st.ssesion_state['thread']
+        del st.session_state['thread']
 
 def delete_assistant():
     if "assistant" in st.session_state:
-        response = client.beta.assistants.delete(st.sesison_state['assistant'].id)
-        del st.sesion_state['assistant']
+        response = client.beta.assistants.delete(st.session_state['assistant'].id)
+        del st.session_state['assistant']
 
 
 if st.button("Start a new thread"):
@@ -76,7 +76,6 @@ if prompt := st.chat_input("What is up?"):
         assistant_id=assistant.id
     )
     thread_messages = client.beta.threads.messages.list(thread.id, limit=1)
-    #st.write(thread_messages)
     response = thread_messages.data[0].content[0].text.value
 
     # show assistant message
