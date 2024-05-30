@@ -99,6 +99,30 @@ if prompt := st.chat_input("What is up?"):
         thread_id=thread.id,
         assistant_id=assistant.id
     )
+
+    if run_check.status == 'requires_action':
+        # function call
+        tool_calls = run_check.required_action.submit_tool_outputs.tool_calls
+        #print("함수 호출: ", tool_calls[0].function)
+
+        tool_outputs = []
+        for tool in tool_calls:
+            func_name = tool.function.name
+            kwargs = json.loads(tool.function.arguments)
+            output = generate_image(**kwargs)
+            tool_outputs.append(
+                {
+                    "tool_call_id":tool.id,
+                    "output":str(output)
+                }
+            )
+        # print("Tool output:", tool_outputs)
+        run = client.beta.threads.runs.submit_tool_outputs_and_poll(
+            thread_id=thread.id,
+            run_id=run.id,
+            tool_outputs=tool_outputs
+        )
+
     # check run step - check tools
     run_steps = client.beta.threads.runs.steps.list(
         thread_id=thread.id,
@@ -109,18 +133,25 @@ if prompt := st.chat_input("What is up?"):
         if run_step.step_details.type == 'tool_calls':
             for tool_call in run_step.step_details.tool_calls:
                 if tool_call.type == 'code_interpreter':
-                    with st.expander("Code"):
-                        tools_info[tool_call.type] = tool_call.code_interpreter.input
+                    tools_info[tool_call.type] = tool_call.code_interpreter.input
+                if tool_call.type == 'function':
+                    tools_info[tool_call.type] = tool_outputs['output']
 
     thread_messages = client.beta.threads.messages.list(thread.id, limit=1)
     response = thread_messages.data[0].content[0].text.value
 
     for k,v in tools_info.items():
-        response += f"""
+        if k == 'code_interpreter':
+            response += f"""
 ### [Tool: {k}]
 ```python
 {v}
 ```
+"""
+        elif k == 'function':
+            response += f"""
+### [Tool: {k}]
+![]({v})
 """
 
     # show assistant message
