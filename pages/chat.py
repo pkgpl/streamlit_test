@@ -18,9 +18,13 @@ def generate_image(image_prompt):
     return image_url
 
 def delete_thread():
+    del st.session_state('messages')
     if "thread" in st.session_state:
-        response = client.beta.threads.delete(st.session_state['thread'].id)
         del st.session_state['thread']
+        try:
+            response = client.beta.threads.delete(st.session_state['thread'].id)
+        except:
+            pass
 
 def delete_assistant():
     if "assistant" in st.session_state:
