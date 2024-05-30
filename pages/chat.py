@@ -39,12 +39,29 @@ if st.button("Leave"):
     delete_thread()
     delete_assistant()
 
+# setup tools
+tools = [
+    {
+        "type":"function",
+        "function": {
+            "name":"generate_image",
+            "description":"Generate image and return url of the image",
+            "parameters": {
+                "type":"object",
+                "properties": {"image_prompt":{"type":"string", "description":"prompt for image generation"}}
+            }
+        }
+    },
+    {"type": "code_interpreter"}
+]
 
+# setup assistant, thread, memory
 if "assistant" in st.session_state:
     assistant = st.session_state["assistant"]
 else:
     assisant = client.beta.assistants.create(
-        model="gpt-4-1106-preview"
+        model="gpt-4-1106-preview",
+        tools = tools
     )
     st.session_state['assistant'] = assisant
 
@@ -61,6 +78,9 @@ if "messages" not in st.session_state:
 for msg in st.session_state.messages:
     with st.chat_message(msg['role']):
         st.markdown(msg['content'])
+
+
+# main chat UI
 
 if prompt := st.chat_input("What is up?"):
     # show user message
