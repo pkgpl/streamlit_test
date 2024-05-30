@@ -76,8 +76,8 @@ if prompt := st.chat_input("What is up?"):
         assistant_id=assistant.id
     )
     thread_messages = client.beta.threads.messages.list(thread.id, limit=1)
-    st.write(thread_messages)
-    response = thread_messages[0].content[0].text.value
+    #st.write(thread_messages)
+    response = thread_messages.data[0].content[0].text.value
 
     # show assistant message
     with st.chat_message("assistant"):
