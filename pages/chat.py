@@ -18,7 +18,7 @@ def generate_image(image_prompt):
     return image_url
 
 def delete_thread():
-    del st.session_state('messages')
+    del st.session_state['messages']
     if "thread" in st.session_state:
         del st.session_state['thread']
         try:
