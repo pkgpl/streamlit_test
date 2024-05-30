@@ -115,7 +115,7 @@ if prompt := st.chat_input("What is up?"):
     thread_messages = client.beta.threads.messages.list(thread.id, limit=1)
     response = thread_messages.data[0].content[0].text.value
 
-    for k,v in tools_info:
+    for k,v in tools_info.items():
         response += """
 [Tool: {k}]
 {v}
