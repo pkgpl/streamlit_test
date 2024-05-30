@@ -1,10 +1,10 @@
 import streamlit as st
 from openai import OpenAI
 
-if not "OPENAI_API_KEY" in st.sesion_state:
+if not "OPENAI_API_KEY" in st.session_state:
     st.write("Enter your OpenAI API Key")
     st.stop()
-    
+
 client = OpenAI(api_key=st.session_state['OPENAI_API_KEY'])
 
 
