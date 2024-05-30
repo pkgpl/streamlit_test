@@ -99,6 +99,21 @@ if prompt := st.chat_input("What is up?"):
         thread_id=thread.id,
         assistant_id=assistant.id
     )
+    # check run step - check tools
+    run_steps = client.beta.threads.runs.steps.list(
+        thread_id=thread.id,
+        run_id=run.id
+    )
+    for i,run_step in enumerate(run_steps.data):
+        #print(f"{i}: {run_step.type}: {run_step.step_details}")
+        if run_step.step_details.type == 'tool_calls':
+            for tool_call in run_step.step_details.tool_calls:
+                st.markdown(f"Tool used: {tool_call.type}")
+                if tool_call.type == 'code_interpreter':
+                    with st.expander("Code"):
+                        st.code(tool_call.code_interpreter.input)
+                    #print(f"- Input: {tool_call.code_interpreter.input}")
+
     thread_messages = client.beta.threads.messages.list(thread.id, limit=1)
     response = thread_messages.data[0].content[0].text.value
 
