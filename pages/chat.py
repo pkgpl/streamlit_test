@@ -32,7 +32,7 @@ if st.button("Leave"):
     delete_assistant()
 
 
-if "assistant" in st.sesion_state:
+if "assistant" in st.session_state:
     assistant = st.session_state["assistant"]
 else:
     assisant = client.beta.assistants.create(
