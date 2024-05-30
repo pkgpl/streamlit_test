@@ -54,34 +54,33 @@ if "messages" not in st.session_state:
     st.session_state['messages'] = []
 
 
-while True:
-    for msg in st.session_state.messages:
-        with st.chat_message(msg['role']):
-            st.markdown(msg['content'])
+for msg in st.session_state.messages:
+    with st.chat_message(msg['role']):
+        st.markdown(msg['content'])
 
-    if prompt := st.chat_input("What is up?"):
-        # show user message
-        with st.chat_message("user"):
-            st.markdown(prompt)
-        # save user message in memory
-        st.session_state.messages.append({"role":"user", "content": prompt})
+if prompt := st.chat_input("What is up?"):
+    # show user message
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    # save user message in memory
+    st.session_state.messages.append({"role":"user", "content": prompt})
 
-        ##  ask llm
-        new_message = client.beta.threads.messages.create(
-            thread_id = thread.id,
-            role="user",
-            content=prompt
-        )
-        run = client.beta.threads.runs.create_and_poll(
-            thread_id=thread.id,
-            assistant_id=assistant.id
-        )
-        thread_messages = client.beta.threads.messages.list(thread.id, limit=1)
-        response = thread_messages[0].content[0].text.value
+    ##  ask llm
+    new_message = client.beta.threads.messages.create(
+        thread_id = thread.id,
+        role="user",
+        content=prompt
+    )
+    run = client.beta.threads.runs.create_and_poll(
+        thread_id=thread.id,
+        assistant_id=assistant.id
+    )
+    thread_messages = client.beta.threads.messages.list(thread.id, limit=1)
+    response = thread_messages[0].content[0].text.value
 
-        # show assistant message
-        with st.chat_message("assistant"):
-            st.markdown(response)
-        # save assistant message in memory
-        st.session_state.messages.append({"role":"assistant", "content": response})
+    # show assistant message
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    # save assistant message in memory
+    st.session_state.messages.append({"role":"assistant", "content": response})
 
