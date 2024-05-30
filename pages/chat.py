@@ -100,9 +100,9 @@ if prompt := st.chat_input("What is up?"):
         assistant_id=assistant.id
     )
 
-    if run_check.status == 'requires_action':
+    if run.status == 'requires_action':
         # function call
-        tool_calls = run_check.required_action.submit_tool_outputs.tool_calls
+        tool_calls = run.required_action.submit_tool_outputs.tool_calls
         #print("함수 호출: ", tool_calls[0].function)
 
         tool_outputs = []
