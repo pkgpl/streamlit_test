@@ -118,7 +118,7 @@ if prompt := st.chat_input("What is up?"):
     for k,v in tools_info.items():
         response += f"""
 ### [Tool: {k}]
-```
+```python
 {v}
 ```
 """
