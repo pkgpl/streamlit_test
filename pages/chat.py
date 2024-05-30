@@ -105,7 +105,7 @@ if prompt := st.chat_input("What is up?"):
         run_id=run.id
     )
     tools_info = {}
-    for i,run_step in enumerate(run_steps.data)
+    for i,run_step in enumerate(run_steps.data):
         if run_step.step_details.type == 'tool_calls':
             for tool_call in run_step.step_details.tool_calls:
                 if tool_call.type == 'code_interpreter':
